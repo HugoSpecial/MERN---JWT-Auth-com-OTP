@@ -103,6 +103,19 @@ npm run dev
 
 ---
 
+## 📸 Imagens Demo
+
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/HomePage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/LoginPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/CreateAccountPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/ResetPasswordPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/ResetPasswordOTPPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/NewPasswordPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/EmailVerifyOTPPage.png)
+![image alt](https://github.com/HugoSpecial/MERN---JWT-Auth-com-OTP/blob/7ff9a4df6320855612c8ae951027959d1192d5b0/demo_Images/HomePageLogin.png)
+
+---
+
 
 ## 📄 Licença
 Este projeto é apenas para fins de aprendizado.
