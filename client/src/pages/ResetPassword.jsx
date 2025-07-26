@@ -11,7 +11,7 @@ const ResetPassword = () => {
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [newpassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [otp, setOtp] = useState(0);
   const [isOtpSubmited, setIsOtpSubmited] = useState(false);
@@ -62,7 +62,7 @@ const ResetPassword = () => {
     const otpArray = inputRefs.current.map((e) => e.value);
     const otp = otpArray.join("");
 
-    setOtp(otp); // <-- isto faltava
+    setOtp(otp); 
     setIsOtpSubmited(true);
   };
 
@@ -74,7 +74,7 @@ const ResetPassword = () => {
         {
           email,
           otp,
-          newPassword: newpassword, // ✅ fix
+          newPassword: newPassword,
         }
       );
 
@@ -179,7 +179,7 @@ const ResetPassword = () => {
             <input
               type="password"
               placeholder="New Password"
-              value={newpassword}
+              value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
               className="bg-transparent text-white outline-none w-full"

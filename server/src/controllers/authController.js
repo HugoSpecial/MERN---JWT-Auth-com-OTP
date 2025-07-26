@@ -3,19 +3,16 @@ import bcrypt from 'bcryptjs';
 import userModel from '../models/userModel.js';
 import transporter from '../config/nodemailer.js';
 
-// Helper function to generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: '7d'
   });
 };
 
-// Register new user
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Validate input
     if (!name || !email || !password) {
       return res.status(400).json({ 
         success: false,
@@ -23,7 +20,6 @@ export const register = async (req, res) => {
       });
     }
 
-    // Check if user exists
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ 
@@ -32,30 +28,25 @@ export const register = async (req, res) => {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
     const newUser = await userModel.create({
       name,
       email,
       password: hashedPassword
     });
 
-    // Generate token
     const token = generateToken(newUser._id);
 
-    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
-    // Send welcome email
     const mailOptions = {
-      from: process.env.EMAIL_FROM,
+      from: process.env.SENDER_EMAIL,
       to: email,
       subject: 'Welcome to Our Service',
       html: `
@@ -66,7 +57,6 @@ export const register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    // Return response without password
     const userResponse = {
       _id: newUser._id,
       name: newUser.name,
@@ -89,12 +79,10 @@ export const register = async (req, res) => {
   }
 };
 
-// Login user
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({ 
         success: false,
@@ -102,7 +90,6 @@ export const login = async (req, res) => {
       });
     }
 
-    // Check if user exists
     const user = await userModel.findOne({ email });
     if (!user) {
       return res.status(401).json({ 
@@ -111,7 +98,6 @@ export const login = async (req, res) => {
       });
     }
 
-    // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ 
@@ -120,18 +106,15 @@ export const login = async (req, res) => {
       });
     }
 
-    // Generate token
     const token = generateToken(user._id);
 
-    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000 
     });
 
-    // Return response without password
     const userResponse = {
       _id: user._id,
       name: user.name,
@@ -154,7 +137,6 @@ export const login = async (req, res) => {
   }
 };
 
-// Logout user
 export const logout = (req, res) => {
   try {
     res.clearCookie('token', {
@@ -175,7 +157,6 @@ export const logout = (req, res) => {
   }
 };
 
-// Check authentication status
 export const isAuthenticated = async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -212,7 +193,6 @@ export const isAuthenticated = async (req, res) => {
   }
 };
 
-// Send verification OTP
 export const sendVerifyOtp = async (req, res) => {
   try {
     const userId = res.locals.userId;
@@ -234,11 +214,11 @@ export const sendVerifyOtp = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.verifyOtp = otp;
-    user.verifyOtpExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    user.verifyOtpExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); 
     await user.save();
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM,
+      from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: 'Verify Your Account',
       html: `
@@ -263,7 +243,6 @@ export const sendVerifyOtp = async (req, res) => {
   }
 };
 
-// Verify email with OTP
 export const verifyEmail = async (req, res) => {
   const { otp } = req.body;
   const userId = res.locals.userId;
@@ -318,7 +297,6 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-// Send password reset OTP
 export const sendResetOtp = async (req, res) => {
   const { email } = req.body;
 
@@ -333,7 +311,7 @@ export const sendResetOtp = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.resetOtp = otp;
-    user.resetOtpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    user.resetOtpExpiry = new Date(Date.now() + 15 * 60 * 1000); 
     await user.save();
 
     const mailOptions = {
@@ -347,6 +325,8 @@ export const sendResetOtp = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
+
+    
 
     return res.status(200).json({ 
       success: true,
@@ -362,7 +342,6 @@ export const sendResetOtp = async (req, res) => {
   }
 };
 
-// Verify password reset OTP
 export const verifyResetOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -403,7 +382,6 @@ export const verifyResetOtp = async (req, res) => {
   }
 };
 
-// Reset password
 export const resetPassword = async (req, res) => {
   const { email, otp, newPassword } = req.body;
 
@@ -416,7 +394,6 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // Verify OTP again for security
     if (user.resetOtp !== otp || user.resetOtpExpiry < new Date()) {
       return res.status(400).json({ 
         success: false,
@@ -424,7 +401,6 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.resetOtp = undefined;

@@ -20,7 +20,6 @@ export const AppContextProvider = (props) => {
         await getUserData();
       }
     } catch (error) {
-      // Silent handling for unauthorized cases
       if (error.response?.status !== 401) {
         toast.error(
           error.response?.data?.message || "Failed to check authentication state"
